@@ -6,7 +6,7 @@ import { submitEnquiry } from "@/lib/enquiries.functions";
 import type { Enquiry } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 
-export function Field({ id, label, error, required, children, className }: { id: string; label: string; error?: string; required?: boolean; children: ReactNode; className?: string }) {
+export function Field({ id, label, error, required, children, className }: { id: string; label: string; error?: string | undefined; required?: boolean | undefined; children: ReactNode; className?: string | undefined }) {
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <label htmlFor={id} className="text-xs font-medium tracking-wide text-foreground/85">

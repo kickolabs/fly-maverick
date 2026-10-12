@@ -22,7 +22,7 @@ export function buildWhatsAppMessage(topic: string, destination: string) {
 
 export function WhatsAppButton() {
   const [open, setOpen] = useState(false);
-  const [topic, setTopic] = useState(topics[0]);
+  const [topic, setTopic] = useState<string>(topics[0] ?? "");
   const [dest, setDest] = useState("");
   const number = site.whatsappNumber;
   const href = number ? `https://wa.me/${number}?text=${encodeURIComponent(buildWhatsAppMessage(topic, dest))}` : "";

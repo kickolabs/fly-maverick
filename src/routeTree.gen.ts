@@ -10,33 +10,219 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as BookingTermsRouteImport } from './routes/booking-terms'
+import { Route as BusinessTravelRouteImport } from './routes/business-travel'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as FlightsRouteImport } from './routes/flights'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TravelDisclaimerRouteImport } from './routes/travel-disclaimer'
+import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
+import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
+import { Route as PackagesIndexRouteImport } from './routes/packages.index'
+import { Route as PackagesSlugRouteImport } from './routes/packages.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingTermsRoute = BookingTermsRouteImport.update({
+  id: '/booking-terms',
+  path: '/booking-terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessTravelRoute = BusinessTravelRouteImport.update({
+  id: '/business-travel',
+  path: '/business-travel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlightsRoute = FlightsRouteImport.update({
+  id: '/flights',
+  path: '/flights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TravelDisclaimerRoute = TravelDisclaimerRouteImport.update({
+  id: '/travel-disclaimer',
+  path: '/travel-disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
+  id: '/destinations/',
+  path: '/destinations/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
+  id: '/destinations/$slug',
+  path: '/destinations/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PackagesIndexRoute = PackagesIndexRouteImport.update({
+  id: '/packages/',
+  path: '/packages/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PackagesSlugRoute = PackagesSlugRouteImport.update({
+  id: '/packages/$slug',
+  path: '/packages/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/booking-terms': typeof BookingTermsRoute
+  '/business-travel': typeof BusinessTravelRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/flights': typeof FlightsRoute
+  '/privacy': typeof PrivacyRoute
+  '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
+  '/travel-disclaimer': typeof TravelDisclaimerRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
+  '/packages/$slug': typeof PackagesSlugRoute
+  '/destinations/': typeof DestinationsIndexRoute
+  '/packages/': typeof PackagesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/booking-terms': typeof BookingTermsRoute
+  '/business-travel': typeof BusinessTravelRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/flights': typeof FlightsRoute
+  '/privacy': typeof PrivacyRoute
+  '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
+  '/travel-disclaimer': typeof TravelDisclaimerRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
+  '/packages/$slug': typeof PackagesSlugRoute
+  '/destinations': typeof DestinationsIndexRoute
+  '/packages': typeof PackagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/booking-terms': typeof BookingTermsRoute
+  '/business-travel': typeof BusinessTravelRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/flights': typeof FlightsRoute
+  '/privacy': typeof PrivacyRoute
+  '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
+  '/travel-disclaimer': typeof TravelDisclaimerRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
+  '/packages/$slug': typeof PackagesSlugRoute
+  '/destinations/': typeof DestinationsIndexRoute
+  '/packages/': typeof PackagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/booking-terms'
+    | '/business-travel'
+    | '/contact'
+    | '/faq'
+    | '/flights'
+    | '/privacy'
+    | '/services'
+    | '/terms'
+    | '/travel-disclaimer'
+    | '/destinations/$slug'
+    | '/packages/$slug'
+    | '/destinations/'
+    | '/packages/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/booking-terms'
+    | '/business-travel'
+    | '/contact'
+    | '/faq'
+    | '/flights'
+    | '/privacy'
+    | '/services'
+    | '/terms'
+    | '/travel-disclaimer'
+    | '/destinations/$slug'
+    | '/packages/$slug'
+    | '/destinations'
+    | '/packages'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/booking-terms'
+    | '/business-travel'
+    | '/contact'
+    | '/faq'
+    | '/flights'
+    | '/privacy'
+    | '/services'
+    | '/terms'
+    | '/travel-disclaimer'
+    | '/destinations/$slug'
+    | '/packages/$slug'
+    | '/destinations/'
+    | '/packages/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  BookingTermsRoute: typeof BookingTermsRoute
+  BusinessTravelRoute: typeof BusinessTravelRoute
+  ContactRoute: typeof ContactRoute
+  FaqRoute: typeof FaqRoute
+  FlightsRoute: typeof FlightsRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ServicesRoute: typeof ServicesRoute
+  TermsRoute: typeof TermsRoute
+  TravelDisclaimerRoute: typeof TravelDisclaimerRoute
+  DestinationsSlugRoute: typeof DestinationsSlugRoute
+  PackagesSlugRoute: typeof PackagesSlugRoute
+  DestinationsIndexRoute: typeof DestinationsIndexRoute
+  PackagesIndexRoute: typeof PackagesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +234,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking-terms': {
+      id: '/booking-terms'
+      path: '/booking-terms'
+      fullPath: '/booking-terms'
+      preLoaderRoute: typeof BookingTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business-travel': {
+      id: '/business-travel'
+      path: '/business-travel'
+      fullPath: '/business-travel'
+      preLoaderRoute: typeof BusinessTravelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flights': {
+      id: '/flights'
+      path: '/flights'
+      fullPath: '/flights'
+      preLoaderRoute: typeof FlightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/travel-disclaimer': {
+      id: '/travel-disclaimer'
+      path: '/travel-disclaimer'
+      fullPath: '/travel-disclaimer'
+      preLoaderRoute: typeof TravelDisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/destinations/': {
+      id: '/destinations/'
+      path: '/destinations'
+      fullPath: '/destinations/'
+      preLoaderRoute: typeof DestinationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/destinations/$slug': {
+      id: '/destinations/$slug'
+      path: '/destinations/$slug'
+      fullPath: '/destinations/$slug'
+      preLoaderRoute: typeof DestinationsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packages/': {
+      id: '/packages/'
+      path: '/packages'
+      fullPath: '/packages/'
+      preLoaderRoute: typeof PackagesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packages/$slug': {
+      id: '/packages/$slug'
+      path: '/packages/$slug'
+      fullPath: '/packages/$slug'
+      preLoaderRoute: typeof PackagesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  BookingTermsRoute: BookingTermsRoute,
+  BusinessTravelRoute: BusinessTravelRoute,
+  ContactRoute: ContactRoute,
+  FaqRoute: FaqRoute,
+  FlightsRoute: FlightsRoute,
+  PrivacyRoute: PrivacyRoute,
+  ServicesRoute: ServicesRoute,
+  TermsRoute: TermsRoute,
+  TravelDisclaimerRoute: TravelDisclaimerRoute,
+  DestinationsSlugRoute: DestinationsSlugRoute,
+  PackagesSlugRoute: PackagesSlugRoute,
+  DestinationsIndexRoute: DestinationsIndexRoute,
+  PackagesIndexRoute: PackagesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

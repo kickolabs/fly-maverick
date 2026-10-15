@@ -4,6 +4,7 @@ import { MessageCircle, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { site } from "@/config/site";
+import { whatsappUrl } from "@/lib/whatsapp";
 import { destinations } from "@/data/destinations";
 
 const topics = [
@@ -25,7 +26,7 @@ export function WhatsAppButton() {
   const [topic, setTopic] = useState<string>(topics[0] ?? "");
   const [dest, setDest] = useState("");
   const number = site.whatsappNumber;
-  const href = number ? `https://wa.me/${number}?text=${encodeURIComponent(buildWhatsAppMessage(topic, dest))}` : "";
+  const href = number ? whatsappUrl(buildWhatsAppMessage(topic, dest)) : "";
 
   return (
     <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3 md:bottom-8 md:right-8">

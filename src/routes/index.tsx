@@ -14,10 +14,13 @@ import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => seo("Fly Maverick — Travel Beyond Limits", "International flight booking, holiday packages, hotel stays and business travel planning for travellers from India."),
+  loader: ({ context }) => Promise.all([context.queryClient.ensureQueryData(destinationsQuery), context.queryClient.ensureQueryData(packagesQuery)]),
   component: Home,
 });
 
 function Home() {
+  const { data: destinations } = useSuspenseQuery(destinationsQuery);
+  const { data: packages } = useSuspenseQuery(packagesQuery);
   return (
     <>
       <section className="relative flex min-h-screen items-center overflow-hidden pt-24">

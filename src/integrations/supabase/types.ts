@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      destinations: {
+        Row: {
+          created_at: string
+          display_order: number
+          experiences: string[]
+          id: string
+          image_url: string | null
+          intro: string
+          name: string
+          published: boolean
+          region: string
+          slug: string
+          tagline: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          experiences?: string[]
+          id?: string
+          image_url?: string | null
+          intro?: string
+          name: string
+          published?: boolean
+          region?: string
+          slug: string
+          tagline?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          experiences?: string[]
+          id?: string
+          image_url?: string | null
+          intro?: string
+          name?: string
+          published?: boolean
+          region?: string
+          slug?: string
+          tagline?: string
+        }
+        Relationships: []
+      }
       enquiries: {
         Row: {
           company_name: string | null
@@ -27,6 +69,7 @@ export type Database = {
           message: string | null
           mobile: string
           service: string | null
+          status: string
         }
         Insert: {
           company_name?: string | null
@@ -40,6 +83,7 @@ export type Database = {
           message?: string | null
           mobile: string
           service?: string | null
+          status?: string
         }
         Update: {
           company_name?: string | null
@@ -53,6 +97,128 @@ export type Database = {
           message?: string | null
           mobile?: string
           service?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      tour_packages: {
+        Row: {
+          created_at: string
+          currency: string | null
+          description: string
+          destination_id: string | null
+          display_order: number
+          duration: string
+          highlights: string[]
+          id: string
+          image_url: string | null
+          name: string
+          price: number | null
+          published: boolean
+          slug: string
+          summary: string
+          types: string[]
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          description?: string
+          destination_id?: string | null
+          display_order?: number
+          duration?: string
+          highlights?: string[]
+          id?: string
+          image_url?: string | null
+          name: string
+          price?: number | null
+          published?: boolean
+          slug: string
+          summary?: string
+          types?: string[]
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          description?: string
+          destination_id?: string | null
+          display_order?: number
+          duration?: string
+          highlights?: string[]
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number | null
+          published?: boolean
+          slug?: string
+          summary?: string
+          types?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_packages_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tourist_places: {
+        Row: {
+          created_at: string
+          description: string
+          destination_id: string
+          display_order: number
+          id: string
+          image_url: string | null
+          name: string
+          published: boolean
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          destination_id: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          name: string
+          published?: boolean
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          destination_id?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          name?: string
+          published?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tourist_places_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -61,10 +227,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -191,6 +363,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin"],
+    },
   },
 } as const

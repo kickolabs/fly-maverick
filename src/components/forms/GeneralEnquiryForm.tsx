@@ -15,14 +15,14 @@ export function GeneralEnquiryForm({
   defaultDestination?: string;
   submitLabel?: string;
 }) {
-  const { status, error, submit, reset } = useEnquirySubmit();
+  const { status, error, submit, reset, whatsappHref } = useEnquirySubmit();
   const { register, handleSubmit, reset: resetForm, formState: { errors, isSubmitting } } = useForm<GeneralEnquiry>({
     resolver: zodResolver(generalSchema),
     defaultValues: { type, service: defaultService, destination: defaultDestination, message: "", travel_date: "" },
   });
   const aria = (n: keyof GeneralEnquiry) => ({ id: `g-${n}`, "aria-invalid": !!errors[n], "aria-describedby": errors[n] ? `g-${n}-error` : undefined });
 
-  if (status === "success") return <SuccessPanel onReset={() => { resetForm(); reset(); }} />;
+  if (status === "success") return <SuccessPanel whatsappHref={whatsappHref} onReset={() => { resetForm(); reset(); }} />;
 
   return (
     <form onSubmit={handleSubmit(submit)} noValidate className="flex flex-col gap-5">

@@ -1,10 +1,11 @@
 import { useServerFn } from "@tanstack/react-start";
-import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2, MessageCircle } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { submitEnquiry } from "@/lib/enquiries.functions";
 import type { Enquiry } from "@/lib/validation";
 import { cn } from "@/lib/utils";
+import { buildEnquiryWhatsAppMessage, summarizeEnquiry, whatsappUrl } from "@/lib/whatsapp";
 
 export function Field({ id, label, error, required, children, className }: { id: string; label: string; error?: string | undefined; required?: boolean | undefined; children: ReactNode; className?: string | undefined }) {
   return (
@@ -24,26 +25,38 @@ export function useEnquirySubmit() {
   const fn = useServerFn(submitEnquiry);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [error, setError] = useState("");
+  const [whatsappHref, setWhatsappHref] = useState("");
   const submit = async (data: Enquiry) => {
     setStatus("idle");
     try {
       await fn({ data });
+      setWhatsappHref(whatsappUrl(buildEnquiryWhatsAppMessage(summarizeEnquiry(data))));
       setStatus("success");
     } catch (e) {
       setError(e instanceof Error && e.message ? e.message : "Something went wrong. Please try again.");
       setStatus("error");
     }
   };
-  return { status, error, submit, reset: () => setStatus("idle") };
+  return { status, error, submit, whatsappHref, reset: () => setStatus("idle") };
 }
 
-export function SuccessPanel({ onReset }: { onReset: () => void }) {
+export function SuccessPanel({ onReset, whatsappHref }: { onReset: () => void; whatsappHref?: string }) {
   return (
     <div role="status" className="flex flex-col items-start gap-3 rounded-lg border border-gold/40 bg-gold-soft p-6">
       <CheckCircle2 className="h-7 w-7 text-gold" />
-      <h3 className="text-xl font-bold">Thank you — your enquiry has been received.</h3>
-      <p className="text-sm text-muted-foreground">
-        Our team will review your requirements and get back to you with suitable options. Please note this is an enquiry, not a booking confirmation.
+      <h3 className="text-xl font-bold">Thank you — your enquiry has been saved.</h3>
+      {whatsappHref ? (
+        <>
+          <p className="text-sm text-muted-foreground">
+            <strong className="text-foreground">One more step:</strong> tap the button below to open WhatsApp with your enquiry already written, then press <strong className="text-foreground">Send</strong>. We are only notified on WhatsApp once you send that message.
+          </p>
+          <Button asChild size="lg">
+            <a href={whatsappHref} target="_blank" rel="noreferrer"><MessageCircle />Open WhatsApp &amp; Send</a>
+          </Button>
+        </>
+      ) : null}
+      <p className="text-xs text-muted-foreground">
+        Our team will review your requirements and get back to you with suitable options. This is an enquiry, not a booking confirmation.
       </p>
       <Button variant="outline" size="sm" onClick={onReset}>Send another enquiry</Button>
     </div>

@@ -1,10 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Destination } from "@/data/destinations";
-import { tripLengthLabel, type HolidayPackage } from "@/data/packages";
+import type { PublicDestination, PublicPackage } from "@/lib/content";
 
-export function DestinationCard({ d }: { d: Destination }) {
+export function DestinationCard({ d }: { d: PublicDestination }) {
   return (
     <Link
       to="/destinations/$slug"
@@ -25,7 +24,7 @@ export function DestinationCard({ d }: { d: Destination }) {
   );
 }
 
-export function PackageCard({ p }: { p: HolidayPackage }) {
+export function PackageCard({ p }: { p: PublicPackage }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-shadow hover:shadow-elegant">
       <div className="relative aspect-[16/10] overflow-hidden">
@@ -39,14 +38,14 @@ export function PackageCard({ p }: { p: HolidayPackage }) {
       <div className="flex flex-1 flex-col p-6">
         <h3 className="text-xl font-bold">{p.name}</h3>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.summary}</p>
-        <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground"><Clock className="h-3.5 w-3.5 text-gold" />{tripLengthLabel[p.suggestedLength]}</p>
+        {p.duration && <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground"><Clock className="h-3.5 w-3.5 text-gold" />{p.duration}</p>}
         <ul className="mt-4 grid gap-1.5 text-sm">
           {p.highlights.slice(0, 3).map((h) => (
             <li key={h} className="flex gap-2"><span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-gold" />{h}</li>
           ))}
         </ul>
         <div className="mt-auto flex items-center justify-between gap-3 pt-6">
-          <span className="font-display text-sm font-semibold text-gold">{p.price ?? "Price on request"}</span>
+          <span className="font-display text-sm font-semibold text-gold">{p.price ?? "Request a Quote"}</span>
           <div className="flex gap-2">
             <Button asChild variant="outline" size="sm">
               <Link to="/packages/$slug" params={{ slug: p.slug }}>View Package</Link>

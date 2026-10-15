@@ -4,14 +4,14 @@ import { businessSchema, type BusinessEnquiry } from "@/lib/validation";
 import { Field, Honeypot, SubmitRow, SuccessPanel, numberOrUndefined, useEnquirySubmit } from "./shared";
 
 export function BusinessEnquiryForm() {
-  const { status, error, submit, reset } = useEnquirySubmit();
+  const { status, error, submit, reset, whatsappHref } = useEnquirySubmit();
   const { register, handleSubmit, reset: resetForm, formState: { errors, isSubmitting } } = useForm<BusinessEnquiry>({
     resolver: zodResolver(businessSchema),
     defaultValues: { type: "business", travellers: 1, notes: "" },
   });
   const aria = (n: keyof BusinessEnquiry) => ({ id: `b-${n}`, "aria-invalid": !!errors[n], "aria-describedby": errors[n] ? `b-${n}-error` : undefined });
 
-  if (status === "success") return <SuccessPanel onReset={() => { resetForm(); reset(); }} />;
+  if (status === "success") return <SuccessPanel whatsappHref={whatsappHref} onReset={() => { resetForm(); reset(); }} />;
 
   return (
     <form onSubmit={handleSubmit(submit)} noValidate className="flex flex-col gap-5">

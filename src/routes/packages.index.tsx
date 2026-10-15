@@ -4,17 +4,22 @@ import hero from "@/assets/maldives.jpg";
 import { Container, PageHero } from "@/components/site/ui";
 import { PackageCard } from "@/components/site/Cards";
 import { CtaBand } from "@/components/site/Sections";
-import { holidayTypes, packages, type HolidayType } from "@/data/packages";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { holidayTypes } from "@/data/packages";
+import { packagesQuery } from "@/lib/content.queries";
 import { Button } from "@/components/ui/button";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/packages/")({
   head: () => seo("Holiday Packages", "Customisable international holiday packages — beaches, cities, mountains, family and romantic getaways."),
+  loader: ({ context }) => context.queryClient.ensureQueryData(packagesQuery),
   component: Packages,
 });
 
 function Packages() {
-  const [type, setType] = useState<HolidayType | "All">("All");
+  const { data: packages } = useSuspenseQuery(packagesQuery);
+  const [type, setType] = useState<string>("All");
+  const types = [...holidayTypes.filter((t) => packages.some((p) => p.types.includes(t))), ...[...new Set(packages.flatMap((p) => p.types))].filter((t) => !(holidayTypes as string[]).includes(t))];
   const list = type === "All" ? packages : packages.filter((p) => p.types.includes(type));
   return (
     <>
@@ -22,7 +27,7 @@ function Packages() {
       <section className="py-20">
         <Container>
           <div className="mb-10 flex flex-wrap gap-2">
-            {(["All", ...holidayTypes] as const).map((t) => (
+            {["All", ...types].map((t) => (
               <Button key={t} size="sm" variant={type === t ? "default" : "outline"} onClick={() => setType(t)}>{t}</Button>
             ))}
           </div>

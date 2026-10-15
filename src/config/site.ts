@@ -10,9 +10,9 @@ export const site = {
   intro:
     "Fly Maverick is an international travel and ticketing company based in India, helping travellers plan flights, holidays and hotel stays abroad.",
   // WhatsApp business number in international format without "+" or spaces, e.g. "9198XXXXXXXX"
-  whatsappNumber: "",
+  whatsappNumber: "918925898600",
   contact: {
-    phone: "",
+    phone: "+91 89258 98600",
     email: "",
     address: "",
   },

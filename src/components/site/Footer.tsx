@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, MapPin, MessageCircle, Phone, Twitter } from "lucide-react";
 import { site } from "@/config/site";
+import { telHref, whatsappUrl } from "@/lib/whatsapp";
 import { Logo } from "./Header";
 
 const quick = [
@@ -66,7 +67,8 @@ export function Footer() {
         <div>
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest">Contact</h3>
           <ul className="grid gap-3 text-sm text-muted-foreground">
-            {phone && <li className="flex gap-2"><Phone className="h-4 w-4 text-gold" /><a href={`tel:${phone}`}>{phone}</a></li>}
+            {phone && <li className="flex gap-2"><Phone className="h-4 w-4 text-gold" /><a href={telHref(phone)}>{phone}</a></li>}
+            <li className="flex gap-2"><MessageCircle className="h-4 w-4 text-gold" /><a href={whatsappUrl("Hello Fly Maverick, I'd like to enquire about a trip.")} target="_blank" rel="noreferrer" className="hover:text-gold">WhatsApp us</a></li>
             {email && <li className="flex gap-2"><Mail className="h-4 w-4 text-gold" /><a href={`mailto:${email}`}>{email}</a></li>}
             {address && <li className="flex gap-2"><MapPin className="h-4 w-4 text-gold" />{address}</li>}
             <li>

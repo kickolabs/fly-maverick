@@ -11,7 +11,7 @@ const tripTypes = [
 ] as const;
 
 export function FlightEnquiryForm({ compact = false, defaultTo = "" }: { compact?: boolean; defaultTo?: string }) {
-  const { status, error, submit, reset } = useEnquirySubmit();
+  const { status, error, submit, reset, whatsappHref } = useEnquirySubmit();
   const {
     register, handleSubmit, watch, setValue, reset: resetForm,
     formState: { errors, isSubmitting },
@@ -23,7 +23,7 @@ export function FlightEnquiryForm({ compact = false, defaultTo = "" }: { compact
   const id = (n: string) => `${compact ? "q" : "f"}-${n}`;
   const aria = (n: keyof FlightEnquiry) => ({ id: id(n), "aria-invalid": !!errors[n], "aria-describedby": errors[n] ? `${id(n)}-error` : undefined });
 
-  if (status === "success") return <SuccessPanel onReset={() => { resetForm(); reset(); }} />;
+  if (status === "success") return <SuccessPanel whatsappHref={whatsappHref} onReset={() => { resetForm(); reset(); }} />;
 
   return (
     <form onSubmit={handleSubmit(submit)} noValidate className="flex flex-col gap-5">

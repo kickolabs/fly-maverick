@@ -18,7 +18,7 @@ function toRow(e: Enquiry): Database["public"]["Tables"]["enquiries"]["Insert"] 
 }
 
 export const submitEnquiry = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => enquirySchema.parse(data))
+  .validator((data: unknown) => enquirySchema.parse(data))
   .handler(async ({ data }) => {
     // Honeypot: silently accept bots without storing.
     if (data.website) return { ok: true as const };

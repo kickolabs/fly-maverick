@@ -49,18 +49,49 @@ function isErrorLike(value: unknown): value is Error {
   return value instanceof Error;
 }
 
+/** Client closed the connection mid-request (refresh, navigation, HMR). Not an app failure. */
+export function isClientAbortError(error: unknown, depth = 0): boolean {
+  if (error == null || depth > CAUSE_DEPTH_LIMIT) return false;
+  if (typeof error === "string") {
+    return error === "aborted" || /operation was aborted/i.test(error);
+  }
+  if (!(error instanceof Error)) return false;
+  if (error.name === "AbortError") return true;
+  const code = (error as NodeJS.ErrnoException).code;
+  if (code === "ECONNRESET" || code === "EPIPE" || code === "ABORT_ERR") return true;
+  if (error.message === "aborted" || /operation was aborted/i.test(error.message)) return true;
+  if (typeof error.stack === "string" && error.stack.includes("abortIncoming")) return true;
+  return isClientAbortError(error.cause, depth + 1);
+}
+
 // Wrap console.error so errors logged by any layer — including h3's internal
 // unhandled-error logging, which this file cannot hook directly — are both
 // recorded for consumeLastCapturedError and expanded before serialization.
 const originalConsoleError = console.error.bind(console);
 console.error = (...args: unknown[]) => {
+  const errorArgs = args.filter(isErrorLike);
+  // Always record first so server.ts can classify aborts after h3 swallows them.
+  for (const err of errorArgs) record(err);
+
+  // Browser/Vite often cancels in-flight SSR when navigating; don't spam the terminal.
+  if (errorArgs.length > 0 && errorArgs.every((err) => isClientAbortError(err))) return;
+
   const expanded = args.map((arg) => {
     if (!isErrorLike(arg)) return arg;
-    record(arg);
     return describeError(arg);
   });
   originalConsoleError(...expanded);
 };
+
+/** Peek without clearing — useful when multiple normalizers run for one request. */
+export function peekLastCapturedError(): unknown {
+  if (!lastCapturedError) return undefined;
+  if (Date.now() - lastCapturedError.at > TTL_MS) {
+    lastCapturedError = undefined;
+    return undefined;
+  }
+  return lastCapturedError.error;
+}
 
 if (typeof globalThis.addEventListener === "function") {
   globalThis.addEventListener("error", (event) => record((event as ErrorEvent).error ?? event));

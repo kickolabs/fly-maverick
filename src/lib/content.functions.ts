@@ -4,8 +4,12 @@ import type { Database } from "@/integrations/supabase/types";
 import { destinationImage, formatPrice, packageImage, type PublicDestination, type PublicPackage, type PublicPlace } from "./content";
 
 function publicClient() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+  const url = process.env["SUPABASE_URL"];
+  const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
+  if (!url || !key) {
+    throw new Error("Missing SUPABASE_URL or SUPABASE_PUBLISHABLE_KEY on the server.");
+  }
+  return createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
     global: {
       fetch: (input, init) => {
@@ -37,47 +41,79 @@ const toPkg = (p: PkgRow): PublicPackage => ({
   country: p.destination && p.destination.published ? { slug: p.destination.slug, name: p.destination.name } : null,
 });
 
-function fail(what: string, error: { message: string }): never {
+/** Log Supabase errors without crashing the whole SSR page. */
+function logLoadError(what: string, error: { message: string }) {
   console.error(`Failed to load ${what}:`, error.message);
-  throw new Error(`We couldn't load ${what} right now. Please refresh.`);
 }
 
 export const listDestinations = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await publicClient().from("destinations").select(DEST_COLS).eq("published", true).order("display_order").order("name");
-  if (error) fail("destinations", error);
-  return data.map(toDest);
+  try {
+    const { data, error } = await publicClient().from("destinations").select(DEST_COLS).eq("published", true).order("display_order").order("name");
+    if (error) {
+      logLoadError("destinations", error);
+      return [];
+    }
+    return (data ?? []).map(toDest);
+  } catch (error) {
+    logLoadError("destinations", { message: error instanceof Error ? error.message : String(error) });
+    return [];
+  }
 });
 
 export const listPackages = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await publicClient().from("tour_packages").select(PKG_COLS).eq("published", true).order("display_order").order("name");
-  if (error) fail("packages", error);
-  return (data as unknown as PkgRow[]).map(toPkg);
+  try {
+    const { data, error } = await publicClient().from("tour_packages").select(PKG_COLS).eq("published", true).order("display_order").order("name");
+    if (error) {
+      logLoadError("packages", error);
+      return [];
+    }
+    return ((data ?? []) as unknown as PkgRow[]).map(toPkg);
+  } catch (error) {
+    logLoadError("packages", { message: error instanceof Error ? error.message : String(error) });
+    return [];
+  }
 });
 
 export const getDestinationPage = createServerFn({ method: "GET" })
-  .inputValidator((slug: string) => String(slug).slice(0, 120))
+  .validator((slug: string) => String(slug).slice(0, 120))
   .handler(async ({ data: slug }) => {
-    const sb = publicClient();
-    const { data: d, error } = await sb.from("destinations").select(DEST_COLS).eq("published", true).eq("slug", slug).maybeSingle();
-    if (error) fail("this destination", error);
-    if (!d) return null;
-    const [places, pkgs] = await Promise.all([
-      sb.from("tourist_places").select("id, name, description, image_url").eq("destination_id", d.id).eq("published", true).order("display_order").order("name"),
-      sb.from("tour_packages").select(PKG_COLS).eq("destination_id", d.id).eq("published", true).order("display_order"),
-    ]);
-    if (places.error) fail("tourist places", places.error);
-    if (pkgs.error) fail("packages", pkgs.error);
-    return {
-      destination: toDest(d),
-      places: places.data.map((p): PublicPlace => ({ id: p.id, name: p.name, description: p.description, image: p.image_url })),
-      packages: (pkgs.data as unknown as PkgRow[]).map(toPkg),
-    };
+    try {
+      const sb = publicClient();
+      const { data: d, error } = await sb.from("destinations").select(DEST_COLS).eq("published", true).eq("slug", slug).maybeSingle();
+      if (error) {
+        logLoadError("this destination", error);
+        return null;
+      }
+      if (!d) return null;
+      const [places, pkgs] = await Promise.all([
+        sb.from("tourist_places").select("id, name, description, image_url").eq("destination_id", d.id).eq("published", true).order("display_order").order("name"),
+        sb.from("tour_packages").select(PKG_COLS).eq("destination_id", d.id).eq("published", true).order("display_order"),
+      ]);
+      if (places.error) logLoadError("tourist places", places.error);
+      if (pkgs.error) logLoadError("packages", pkgs.error);
+      return {
+        destination: toDest(d),
+        places: (places.data ?? []).map((p): PublicPlace => ({ id: p.id, name: p.name, description: p.description, image: p.image_url })),
+        packages: ((pkgs.data ?? []) as unknown as PkgRow[]).map(toPkg),
+      };
+    } catch (error) {
+      logLoadError("this destination", { message: error instanceof Error ? error.message : String(error) });
+      return null;
+    }
   });
 
 export const getPackagePage = createServerFn({ method: "GET" })
-  .inputValidator((slug: string) => String(slug).slice(0, 120))
+  .validator((slug: string) => String(slug).slice(0, 120))
   .handler(async ({ data: slug }) => {
-    const { data, error } = await publicClient().from("tour_packages").select(PKG_COLS).eq("published", true).eq("slug", slug).maybeSingle();
-    if (error) fail("this package", error);
-    return data ? toPkg(data as unknown as PkgRow) : null;
+    try {
+      const { data, error } = await publicClient().from("tour_packages").select(PKG_COLS).eq("published", true).eq("slug", slug).maybeSingle();
+      if (error) {
+        logLoadError("this package", error);
+        return null;
+      }
+      return data ? toPkg(data as unknown as PkgRow) : null;
+    } catch (error) {
+      logLoadError("this package", { message: error instanceof Error ? error.message : String(error) });
+      return null;
+    }
   });

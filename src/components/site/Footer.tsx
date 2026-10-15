@@ -80,7 +80,7 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-6 text-xs text-muted-foreground md:flex-row md:justify-between md:px-8">
           <p>© {new Date().getFullYear()} {site.name}. {site.supportingTagline}</p>
-          <p>International travel &amp; ticketing. We do not offer work visa, immigration or recruitment services.</p>
+          <p>Designed &amp; Developed by <span className="font-semibold text-foreground">Kicko Tech</span></p>
         </div>
       </div>
     </footer>
